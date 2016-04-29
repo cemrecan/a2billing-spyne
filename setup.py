@@ -38,7 +38,7 @@ setup(
     url='http://github.com/cemrecan/a2billing-spyne',
     license='GPL',
 
-    install_requires=['spyne', 'sqlalchemy'],
+    install_requires=['spyne', 'sqlalchemy', 'neurons'],
 
     include_package_data=True,
     package_data={
