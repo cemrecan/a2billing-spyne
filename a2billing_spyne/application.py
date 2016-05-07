@@ -32,31 +32,68 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-from __future__ import print_function
-
 import logging
 logger = logging.getLogger(__name__)
 
+from os.path import abspath
 
-from neurons.daemon import ServiceDaemon
+from twisted.internet import reactor
+
+from spyne.protocol.html import HtmlMicroFormat
+from spyne.protocol.http import HttpRpc
+from spyne.protocol.json import JsonDocument
+from spyne.protocol.xml import XmlDocument
+
+from neurons import Application
+
+from neurons.daemon.config import StaticFileServer, HttpListener
+
+from a2billing_spyne.service import TestServices
 
 
-def bootstrap(config):
-    logger.debug("This is bootstrap.")
+def start_a2bs(config):
+    subconfig = config.services.getwrite('web', HttpListener(
+        host='0.0.0.0',
+        port=9271,
+        disabled=False,
+        _subapps=[
+            StaticFileServer(
+                url='assets', path=abspath('assets'),
+                list_contents=False
+            )
+        ],
+    ))
 
-
-def init(config):
-    from a2billing_spyne.application import start_a2bs
-
-    logger.debug("This is init.")
-
-    return [
-        ('a2bs', start_a2bs),
+    services = [
+        TestServices,
     ]
 
+    subconfig.subapps['json'] = \
+        Application(services,
+            tns='a2bs.web', name='A2BillingJson',
+            in_protocol=HttpRpc(validator='soft'),
+            out_protocol=JsonDocument(),
+            config=config,
+        )
 
-def main():
-    import sys
-    from neurons.daemon.main import main as neurons_main
-    return neurons_main('a2billing-spyne',
-                                   sys.argv, init, bootstrap, cls=ServiceDaemon)
+    subconfig.subapps['xml'] = \
+        Application(services,
+            tns='a2bs.web', name='A2BillingXml',
+            in_protocol=HttpRpc(validator='soft'),
+            out_protocol=XmlDocument(),
+            config=config,
+        )
+
+    subconfig.subapps[''] = \
+        Application(services,
+            tns='a2bs.web', name='A2BillingHtml',
+            in_protocol=HttpRpc(validator='soft'),
+            out_protocol=HtmlMicroFormat(),
+            config=config,
+        )
+
+    site = subconfig.gen_site()
+
+    logger.info("listening for a2billing http endpoint %s:%d",
+                                                 subconfig.host, subconfig.port)
+    return reactor.listenTCP(subconfig.port, site, interface=subconfig.host), None

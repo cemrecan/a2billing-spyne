@@ -36,7 +36,8 @@
 from datetime import date
 
 from spyne import table, Unicode, Date, Integer32, Float, Integer64, Decimal, Time
-from spyne.model.table import TableModel
+
+from neurons.model import TableModel
 
 
 class CardGroup(TableModel):
