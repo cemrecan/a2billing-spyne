@@ -47,7 +47,7 @@ setup(
 
     entry_points = {
         'console_scripts': [
-            '%(p)s_daemon=%(p)s.main:main' % {'p': PROJECT_NAME},
+            'a2bs_daemon=%(p)s.main:main' % {'p': PROJECT_NAME},
         ]
     },
 )

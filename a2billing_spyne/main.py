@@ -32,6 +32,22 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+from __future__ import print_function
+
+import sys
+
+from neurons.daemon import ServiceDaemon
+from neurons.daemon.main import main as neurons_main
+
+
+def bootstrap(config):
+    print("This is bootstrap.")
+
+
+def init(config):
+    print("This is init.")
+
 
 def main():
-    pass
+    return neurons_main('a2billing-spyne',
+                                   sys.argv, init, bootstrap, cls=ServiceDaemon)
