@@ -2,6 +2,4 @@
 *.pyo
 virt-*
 *.egg-info
-
-
-.idea
+*.yaml

@@ -32,31 +32,13 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-from __future__ import print_function
+from spyne import rpc
 
-import logging
-logger = logging.getLogger(__name__)
-
-
-from neurons.daemon import ServiceDaemon
+from a2billing_spyne.model import Card
+from a2billing_spyne.service import ReaderServiceBase
 
 
-def bootstrap(config):
-    logger.debug("This is bootstrap.")
-
-
-def init(config):
-    from a2billing_spyne.application import start_a2bs
-
-    logger.debug("This is init.")
-
-    return [
-        ('a2bs', start_a2bs),
-    ]
-
-
-def main():
-    import sys
-    from neurons.daemon.main import main as neurons_main
-    return neurons_main('a2billing-spyne',
-                                   sys.argv, init, bootstrap, cls=ServiceDaemon)
+class CardReaderServices(ReaderServiceBase):
+    @rpc(Card, _returns=Card)
+    def echo_card(self, card):
+        return card

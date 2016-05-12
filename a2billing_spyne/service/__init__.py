@@ -32,31 +32,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-from __future__ import print_function
-
-import logging
-logger = logging.getLogger(__name__)
-
-
-from neurons.daemon import ServiceDaemon
-
-
-def bootstrap(config):
-    logger.debug("This is bootstrap.")
-
-
-def init(config):
-    from a2billing_spyne.application import start_a2bs
-
-    logger.debug("This is init.")
-
-    return [
-        ('a2bs', start_a2bs),
-    ]
-
-
-def main():
-    import sys
-    from neurons.daemon.main import main as neurons_main
-    return neurons_main('a2billing-spyne',
-                                   sys.argv, init, bootstrap, cls=ServiceDaemon)
+from a2billing_spyne.service._base import ReaderServiceBase
+from a2billing_spyne.service._base import WriterServiceBase
+from a2billing_spyne.service._base import TestServices
