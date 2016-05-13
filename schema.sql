@@ -19,6 +19,70 @@ SET default_with_oids = true;
 -- Name: cc_agent; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
+CREATE FUNCTION cc_card_copy_credit_orig() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$ BEGIN
+    NEW.CREDIT_ORIG = NEW_CREDIT;
+    RETURN NEW;
+END $$;
+
+
+ALTER FUNCTION public.cc_card_copy_credit_orig() OWNER TO postgres;
+
+--
+-- Name: cc_card_serial_set(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION cc_card_serial_set() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    UPDATE cc_card_seria SET value=value+1 WHERE id=NEW.id_seria;
+    SELECT value INTO NEW.serial FROM cc_card_seria WHERE id=NEW.id_seria;
+    RETURN NEW;
+  END
+$$;
+
+
+ALTER FUNCTION public.cc_card_serial_set() OWNER TO postgres;
+
+--
+-- Name: cc_card_serial_update(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION cc_card_serial_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    IF NEW.id_seria IS NOT NULL AND NEW.id_seria = OLD.id_seria THEN
+      RETURN NEW;
+    END IF;
+    UPDATE cc_card_seria SET value=value+1 WHERE id=NEW.id_seria;
+    SELECT value INTO NEW.serial FROM cc_card_seria WHERE id=NEW.id_seria;
+    RETURN NEW;
+  END
+$$;
+
+
+ALTER FUNCTION public.cc_card_serial_update() OWNER TO postgres;
+
+--
+-- Name: cc_ratecard_validate_regex(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION cc_ratecard_validate_regex() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $_$
+  BEGIN
+    IF SUBSTRING(new.dialprefix,1,1) != '_' THEN
+      RETURN new;
+    END IF;
+    PERFORM '0' ~* REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(REGEXP_REPLACE('^' || new.dialprefix || '$', 'X', '[0-9]', 'g'), 'Z', '[1-9]', 'g'), 'N', '[2-9]', 'g'), E'\\.', E'\\.+', 'g'), '_', '', 'g');
+    RETURN new;
+  END
+$_$;
+
+
 CREATE TABLE cc_agent (
     id bigint NOT NULL,
     datecreation timestamp without time zone DEFAULT now(),
