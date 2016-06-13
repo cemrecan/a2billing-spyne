@@ -35,3 +35,5 @@
 from a2billing_spyne.service._base import ReaderServiceBase
 from a2billing_spyne.service._base import WriterServiceBase
 from a2billing_spyne.service._base import TestServices
+from a2billing_spyne.service._base import ScreenBase
+from a2billing_spyne.service._base import DalBase
