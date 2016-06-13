@@ -38,9 +38,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-from neurons.daemon import ServiceDaemon
-
-
 def bootstrap(config):
     logger.debug("This is bootstrap.")
 
@@ -57,6 +54,7 @@ def init(config):
 
 def main():
     import sys
+    from neurons.daemon import ServiceDaemon
     from neurons.daemon.main import main as neurons_main
     return neurons_main('a2billing-spyne',
                                    sys.argv, init, bootstrap, cls=ServiceDaemon)
