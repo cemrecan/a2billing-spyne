@@ -34,12 +34,20 @@
 
 from __future__ import print_function
 
+from contextlib import closing
+
 import logging
 logger = logging.getLogger(__name__)
 
 
 def bootstrap(config):
-    logger.debug("This is bootstrap.")
+    from neurons import TableModel
+    import a2billing_spyne.model
+
+    db = config.get_main_store()
+    with closing(db.Session()) as session:
+        TableModel.Attributes.sqla_metadata.create_all(checkfirst=True)
+        session.commit()
 
 
 def init(config):
