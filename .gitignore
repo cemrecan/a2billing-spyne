@@ -3,3 +3,9 @@
 virt-*
 *.egg-info
 *.yaml
+
+build
+dist
+wheels
+neurons
+spyne
