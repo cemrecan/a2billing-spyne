@@ -44,7 +44,7 @@ class CardGroup(TableModel):
     __tablename__ = 'cc_card_group'
 
     id = Integer32(primary_key=True)
-    name = Unicode(1, )
+    name = Unicode(1)
     description = Unicode
     users_perms = Integer32(default=0)
     id_agent = Integer32(default=0)
@@ -61,10 +61,10 @@ class Card(TableModel):
     enableexpire = Unicode(1)
     expiredays = Unicode(1)
     username = Unicode(1, null=False)
-    useralias = Unicode(1, )
-    uipass = Unicode(1, )
+    useralias = Unicode(1)
+    uipass = Unicode(1)
     credit = Float(default=0.0)
-    tariff = Unicode(1, )
+    tariff = Unicode(1)
     id_didgroup = Unicode(1)
     activated = Unicode(1, choices=(('f', 'False'), ('t', 'True')))
     status = Integer32(default=1)
@@ -174,9 +174,9 @@ class Country(TableModel):
     __tablename__ = 'cc_country'
 
     id = Integer64(primary_key=True)
-    countrycode = Unicode(1, )
-    countryname = Unicode(1, )
-    countryprefix = Unicode(1, )
+    countrycode = Unicode(1)
+    countryname = Unicode(1)
+    countryprefix = Unicode(1)
 
 
 
@@ -259,7 +259,7 @@ class Call(TableModel):
     sessionbill = Float
     sessiontime = Integer32
     sipiax = Integer32
-    src = Unicode(1, )
+    src = Unicode(1)
     terminatecauseid = Integer32(index=True)
 
 class Charge(TableModel):
@@ -290,7 +290,7 @@ class Agent(TableModel):
 
     __tablename__ = 'cc_agent'
 
-    active = Unicode(1, )
+    active = Unicode(1)
     address = Unicode(1)
     bank_info = Unicode
     banner = Unicode
@@ -395,7 +395,7 @@ class Backup(TableModel):
     creationdate = Date
     id = Integer64(primary_key=True)
     name = Unicode(1, unique=True)
-    path = Unicode(1, )
+    path = Unicode(1)
 
 
 class BillingCustomer(TableModel):
@@ -415,7 +415,7 @@ class CallArchive(TableModel):
     calledstation = Unicode(1, index=True)
     card = Integer64(db_column='card_id')
     destination = Integer32
-    dnid = Unicode(1, )
+    dnid = Unicode(1)
     id = Integer64(primary_key=True)
     id_card_package_offer = Integer32
     id_did = Integer32
@@ -423,17 +423,17 @@ class CallArchive(TableModel):
     id_tariffgroup = Integer32
     id_tariffplan = Integer32
     id_trunk = Integer32
-    nasipaddress = Unicode(1, )
+    nasipaddress = Unicode(1)
     real_sessiontime = Integer32
     sessionbill = Float
-    sessionid = Unicode(1, )
+    sessionid = Unicode(1)
     sessiontime = Integer32
     sipiax = Integer32
-    src = Unicode(1, )
+    src = Unicode(1)
     starttime = Date(index=True)
     stoptime = Date
     terminatecauseid = Integer32(index=True)
-    uniqueid = Unicode(1, )
+    uniqueid = Unicode(1)
 
 
 class CallbackSpool(TableModel):
@@ -514,10 +514,10 @@ class CampaignConfig(TableModel):
     __tablename__ = 'cc_campaign_config'
 
     id = Integer32(primary_key=True)
-    context = Unicode(1, )
+    context = Unicode(1)
     description = Unicode
     flatrate = Decimal
-    name = Unicode(1, )
+    name = Unicode(1)
 
 class CampaignPhonebook(TableModel):
     __tablename__ = 'cc_campaign_phonebook'
@@ -529,7 +529,7 @@ class CampaignPhonebook(TableModel):
 class CampaignPhonestatus(TableModel):
     __tablename__ = 'cc_campaign_phonestatus'
 
-    id_callback = Unicode(1, )
+    id_callback = Unicode(1)
     id_campaign = Integer32(primary_key=True)
     id_phonenumber = Integer64(primary_key=True)
     lastuse = Date
@@ -550,8 +550,8 @@ class CardArchive(TableModel):
     __tablename__ = 'cc_card_archive'
 
     vat_rn = Unicode(1, db_column='VAT_RN')
-    activated = Unicode(1, )
-    activatedbyuser = Unicode(1, )
+    activated = Unicode(1)
+    activatedbyuser = Unicode(1)
     address = Unicode(1)
     autorefill = Integer32
     city = Unicode(1)
@@ -586,7 +586,7 @@ class CardArchive(TableModel):
     lastname = Unicode(1)
     lastuse = Date
     loginkey = Unicode(1)
-    mac_addr = Unicode(1, )
+    mac_addr = Unicode(1)
     nbservice = Integer32
     nbused = Integer32
     notify_email = Integer32
@@ -606,7 +606,7 @@ class CardArchive(TableModel):
     traffic_target = Unicode
     typepaid = Integer32
     uipass = Unicode(1)
-    useralias = Unicode(1, )
+    useralias = Unicode(1)
     username = Unicode(1, index=True)
     vat = Float
     voicemail_activated = Integer32
@@ -639,7 +639,7 @@ class CardSeria(TableModel):
 
     id = Integer32(primary_key=True)
     description = Unicode
-    name = Unicode(1, )
+    name = Unicode(1)
     value = Integer64
 
 
@@ -672,7 +672,7 @@ class Config(TableModel):
 
     id = Integer32(primary_key=True)
     config_description = Unicode(1)
-    config_group_title = Unicode(1, )
+    config_group_title = Unicode(1)
     config_key = Unicode(1)
     config_listvalues = Unicode(1)
     config_title = Unicode(1)
@@ -684,19 +684,19 @@ class ConfigGroup(TableModel):
     __tablename__ = 'cc_config_group'
 
     id = Integer32(primary_key=True)
-    group_description = Unicode(1, )
+    group_description = Unicode(1)
     group_title = Unicode(1, unique=True)
 
 
 class Configuration(TableModel):
     __tablename__ = 'cc_configuration'
 
-    configuration_description = Unicode(1, )
+    configuration_description = Unicode(1)
     configuration = Integer32(primary_key=True, db_column='configuration_id')
-    configuration_key = Unicode(1, )
-    configuration_title = Unicode(1, )
+    configuration_key = Unicode(1)
+    configuration_title = Unicode(1)
     configuration_type = Integer32
-    configuration_value = Unicode(1, )
+    configuration_value = Unicode(1)
     set_function = Unicode(1)
     use_function = Unicode(1)
 
@@ -704,10 +704,10 @@ class Currencies(TableModel):
     __tablename__ = 'cc_currencies'
 
     id = Integer32(primary_key=True)
-    basecurrency = Unicode(1, )
+    basecurrency = Unicode(1)
     currency = Unicode(1, unique=True)
     lastupdate = Date
-    name = Unicode(1, )
+    name = Unicode(1)
     value = Decimal
 
 
@@ -728,14 +728,14 @@ class Didgroup(TableModel):
     __tablename__ = 'cc_didgroup'
 
     creationdate = Date
-    didgroupname = Unicode(1, )
+    didgroupname = Unicode(1)
     id = Integer64(primary_key=True)
 
 
 class EpaymentLog(TableModel):
     __tablename__ = 'cc_epayment_log'
 
-    amount = Unicode(1, )
+    amount = Unicode(1)
     cardid = Integer64
     cc_expires = Unicode(1)
     cc_number = Unicode(1)
@@ -747,7 +747,7 @@ class EpaymentLog(TableModel):
     id = Integer64(primary_key=True)
     item = Integer64(db_column='item_id')
     item_type = Unicode(1)
-    paymentmethod = Unicode(1, )
+    paymentmethod = Unicode(1)
     status = Integer32
     transaction_detail = Unicode
     vat = Float
@@ -757,7 +757,7 @@ class EpaymentLogAgent(TableModel):
     __tablename__ = 'cc_epayment_log_agent'
 
     agent = Integer64(db_column='agent_id')
-    amount = Unicode(1, )
+    amount = Unicode(1)
     cc_expires = Unicode(1)
     cc_number = Unicode(1)
     cc_owner = Unicode(1)
@@ -766,7 +766,7 @@ class EpaymentLogAgent(TableModel):
     currency = Unicode(1)
     cvv = Unicode(1)
     id = Integer64(primary_key=True)
-    paymentmethod = Unicode(1, )
+    paymentmethod = Unicode(1)
     status = Integer32
     transaction_detail = Unicode
     vat = Float
@@ -777,54 +777,54 @@ class IaxBuddies(TableModel):
 
     id = Integer32(primary_key=True)
     defaultip = Unicode(1, db_column='DEFAULTip')
-    accountcode = Unicode(1, )
-    adsi = Unicode(1, )
-    allow = Unicode(1, )
+    accountcode = Unicode(1)
+    adsi = Unicode(1)
+    allow = Unicode(1)
     amaflags = Unicode(1)
-    auth = Unicode(1, )
-    callerid = Unicode(1, )
-    cid_number = Unicode(1, )
-    codecpriority = Unicode(1, )
-    context = Unicode(1, )
-    dbsecret = Unicode(1, )
-    deny = Unicode(1, )
-    disallow = Unicode(1, )
-    encryption = Unicode(1, )
-    forcejitterbuffer = Unicode(1, )
-    fullname = Unicode(1, )
+    auth = Unicode(1)
+    callerid = Unicode(1)
+    cid_number = Unicode(1)
+    codecpriority = Unicode(1)
+    context = Unicode(1)
+    dbsecret = Unicode(1)
+    deny = Unicode(1)
+    disallow = Unicode(1)
+    encryption = Unicode(1)
+    forcejitterbuffer = Unicode(1)
+    fullname = Unicode(1)
     host = Unicode(1, index=True)
     id_cc_card = Integer32
-    inkeys = Unicode(1, )
+    inkeys = Unicode(1)
     ipaddr = Unicode(1, index=True)
-    jitterbuffer = Unicode(1, )
+    jitterbuffer = Unicode(1)
     language = Unicode(1)
-    mask = Unicode(1, )
-    maxauthreq = Unicode(1, )
-    maxcallnumbers = Unicode(1, )
-    maxcallnumbers_nonvalidated = Unicode(1, )
-    mohinterpret = Unicode(1, )
-    mohsuggest = Unicode(1, )
+    mask = Unicode(1)
+    maxauthreq = Unicode(1)
+    maxcallnumbers = Unicode(1)
+    maxcallnumbers_nonvalidated = Unicode(1)
+    mohinterpret = Unicode(1)
+    mohsuggest = Unicode(1)
     name = Unicode(1, unique=True)
-    outkey = Unicode(1, )
+    outkey = Unicode(1)
     permit = Unicode(1)
     port = Unicode(1, index=True)
     qualify = Unicode(1)
-    qualifyfreqnotok = Unicode(1, )
-    qualifyfreqok = Unicode(1, )
-    qualifysmoothing = Unicode(1, )
-    regcontext = Unicode(1, )
-    regexten = Unicode(1, )
+    qualifyfreqnotok = Unicode(1)
+    qualifyfreqok = Unicode(1)
+    qualifysmoothing = Unicode(1)
+    regcontext = Unicode(1)
+    regexten = Unicode(1)
     regseconds = Integer32
-    requirecalltoken = Unicode(1, )
-    secret = Unicode(1, )
-    sendani = Unicode(1, )
-    setvar = Unicode(1, )
-    sourceaddress = Unicode(1, )
-    timezone = Unicode(1, )
-    transfer = Unicode(1, )
+    requirecalltoken = Unicode(1)
+    secret = Unicode(1)
+    sendani = Unicode(1)
+    setvar = Unicode(1)
+    sourceaddress = Unicode(1)
+    timezone = Unicode(1)
+    transfer = Unicode(1)
     trunk = Unicode(1)
-    type = Unicode(1, )
-    username = Unicode(1, )
+    type = Unicode(1)
+    username = Unicode(1)
 
 
 class Invoice(TableModel):
@@ -837,14 +837,14 @@ class Invoice(TableModel):
     paid_status = Integer32
     reference = Unicode(1, unique=True)
     status = Integer32
-    title = Unicode(1, )
+    title = Unicode(1)
 
 class InvoiceConf(TableModel):
     __tablename__ = 'cc_invoice_conf'
 
     id = Integer32(primary_key=True)
     key_val = Unicode(1, unique=True)
-    value = Unicode(1, )
+    value = Unicode(1)
 
 
 
@@ -872,7 +872,7 @@ class InvoicePayment(TableModel):
 class Iso639(TableModel):
     __tablename__ = 'cc_iso639'
 
-    charset = Unicode(1, )
+    charset = Unicode(1)
     code = Unicode(1, primary_key=True)
     lname = Unicode(1)
     name = Unicode(1, unique=True)
@@ -918,7 +918,7 @@ class Monitor(TableModel):
     dial_code = Integer32
     enable = Integer32
     id = Integer64(primary_key=True)
-    label = Unicode(1, )
+    label = Unicode(1)
     query = Unicode(1)
     query_type = Integer32
     result_type = Integer32
@@ -952,7 +952,7 @@ class OutboundCidGroup(TableModel):
 
     id = Integer64(primary_key=True)
     creationdate = Date
-    group_name = Unicode(1, )
+    group_name = Unicode(1)
 
 
 class OutboundCidList(TableModel):
@@ -972,7 +972,7 @@ class PackageGroup(TableModel):
 
     id = Integer32(primary_key=True)
     description = Unicode
-    name = Unicode(1, )
+    name = Unicode(1)
 
 
 class PackageOffer(TableModel):
@@ -982,7 +982,7 @@ class PackageOffer(TableModel):
     creationdate = Date
     freetimetocall = Integer32
     id = Integer64(primary_key=True)
-    label = Unicode(1, )
+    label = Unicode(1)
     packagetype = Integer32
     startday = Integer32
 
@@ -1005,8 +1005,8 @@ class PaymentMethods(TableModel):
     __tablename__ = 'cc_payment_methods'
 
     id = Integer64(primary_key=True)
-    payment_filename = Unicode(1, )
-    payment_method = Unicode(1, )
+    payment_filename = Unicode(1)
+    payment_method = Unicode(1)
 
 
 class Payments(TableModel):
@@ -1018,9 +1018,9 @@ class Payments(TableModel):
     cc_type = Unicode(1)
     currency = Unicode(1)
     currency_value = Decimal
-    customers_email_address = Unicode(1, )
+    customers_email_address = Unicode(1)
     customers = Integer64(db_column='customers_id')
-    customers_name = Unicode(1, )
+    customers_name = Unicode(1)
     date_purchased = Date
     id = Integer64(primary_key=True)
     item = Unicode(1, db_column='item_id')
@@ -1030,14 +1030,14 @@ class Payments(TableModel):
     orders_amount = Decimal
     orders_date_finished = Date
     orders_status = Integer32
-    payment_method = Unicode(1, )
+    payment_method = Unicode(1)
 
 class PaymentsAgent(TableModel):
     __tablename__ = 'cc_payments_agent'
 
-    agent_email_address = Unicode(1, )
+    agent_email_address = Unicode(1)
     agent = Integer64(db_column='agent_id')
-    agent_name = Unicode(1, )
+    agent_name = Unicode(1)
     cc_expires = Unicode(1)
     cc_number = Unicode(1)
     cc_owner = Unicode(1)
@@ -1053,27 +1053,27 @@ class PaymentsAgent(TableModel):
     orders_amount = Decimal
     orders_date_finished = Date
     orders_status = Integer32
-    payment_method = Unicode(1, )
+    payment_method = Unicode(1)
 
 class PaymentsStatus(TableModel):
     __tablename__ = 'cc_payments_status'
 
     id = Integer64(primary_key=True)
     status = Integer32(db_column='status_id')
-    status_name = Unicode(1, )
+    status_name = Unicode(1)
 
 
 class Paypal(TableModel):
     __tablename__ = 'cc_paypal'
 
     id = Integer64(primary_key=True)
-    address_city = Unicode(1, )
-    address_country = Unicode(1, )
-    address_name = Unicode(1, )
-    address_state = Unicode(1, )
-    address_status = Unicode(1, )
-    address_street = Unicode(1, )
-    address_zip = Unicode(1, )
+    address_city = Unicode(1)
+    address_country = Unicode(1)
+    address_name = Unicode(1)
+    address_state = Unicode(1)
+    address_status = Unicode(1)
+    address_street = Unicode(1)
+    address_zip = Unicode(1)
     first_name = Unicode(1)
     item_name = Unicode(1)
     item_number = Unicode(1)
@@ -1082,19 +1082,19 @@ class Paypal(TableModel):
     mc_fee = Decimal
     mc_gross = Decimal
     memo = Unicode
-    payer_business_name = Unicode(1, )
+    payer_business_name = Unicode(1)
     payer_email = Unicode(1)
     payer = Unicode(1, db_column='payer_id')
     payer_status = Unicode(1)
     payment_date = Unicode(1)
-    payment_status = Unicode(1, )
+    payment_status = Unicode(1)
     payment_type = Unicode(1)
-    pending_reason = Unicode(1, )
+    pending_reason = Unicode(1)
     quantity = Integer32
-    reason_code = Unicode(1, )
+    reason_code = Unicode(1)
     tax = Decimal
     txn = Unicode(1, db_column='txn_id', unique=True)
-    txn_type = Unicode(1, )
+    txn_type = Unicode(1)
 
 
 class Phonebook(TableModel):
@@ -1103,7 +1103,7 @@ class Phonebook(TableModel):
     id = Integer32(primary_key=True)
     description = Unicode
     id_card = Integer64
-    name = Unicode(1, )
+    name = Unicode(1)
 
 
 class Phonenumber(TableModel):
@@ -1115,7 +1115,7 @@ class Phonenumber(TableModel):
     id_phonebook = Integer32
     info = Unicode
     name = Unicode(1)
-    number = Unicode(1, )
+    number = Unicode(1)
     status = Integer32
 
 
@@ -1164,7 +1164,7 @@ class Ratecard(TableModel):
     initblock = Integer32
     is_merged = Integer32
     minimal_cost = Decimal
-    musiconhold = Unicode(1, )
+    musiconhold = Unicode(1)
     rateinitial = Decimal
     rounding_calltime = Integer32
     rounding_threshold = Integer32
@@ -1188,7 +1188,7 @@ class Receipt(TableModel):
     id = Integer64(primary_key=True)
     id_card = Integer64
     status = Integer32
-    title = Unicode(1, )
+    title = Unicode(1)
 
 
 class ReceiptItem(TableModel):
@@ -1219,7 +1219,7 @@ class RestrictedPhonenumber(TableModel):
 
     id = Integer64(primary_key=True)
     id_card = Integer64
-    number = Unicode(1, )
+    number = Unicode(1)
 
 
 class ServerGroup(TableModel):
@@ -1250,10 +1250,10 @@ class Service(TableModel):
     datelastrun = Date
     daynumber = Integer32
     dialplan = Integer32
-    emailreport = Unicode(1, )
+    emailreport = Unicode(1)
     id = Integer64(primary_key=True)
     maxnumbercycle = Integer32
-    name = Unicode(1, )
+    name = Unicode(1)
     numberofrun = Integer32
     operate_mode = Integer32
     period = Integer32
@@ -1280,109 +1280,109 @@ class SipBuddies(TableModel):
 
     id = Integer32(primary_key=True)
     defaultip = Unicode(1, db_column='DEFAULTip')
-    accountcode = Unicode(1, )
-    allow = Unicode(1, )
-    allowtransfer = Unicode(1, )
+    accountcode = Unicode(1)
+    allow = Unicode(1)
+    allowtransfer = Unicode(1)
     amaflags = Unicode(1)
-    auth = Unicode(1, )
-    autoframing = Unicode(1, )
+    auth = Unicode(1)
+    autoframing = Unicode(1)
     callbackextension = Unicode(1)
-    callerid = Unicode(1, )
+    callerid = Unicode(1)
     callgroup = Unicode(1)
-    callingpres = Unicode(1, )
+    callingpres = Unicode(1)
     cancallforward = Unicode(1)
-    canreinvite = Unicode(1, )
-    cid_number = Unicode(1, )
-    context = Unicode(1, )
-    defaultuser = Unicode(1, )
-    deny = Unicode(1, )
-    disallow = Unicode(1, )
-    dtmfmode = Unicode(1, )
-    fromdomain = Unicode(1, )
-    fromuser = Unicode(1, )
-    fullcontact = Unicode(1, )
+    canreinvite = Unicode(1)
+    cid_number = Unicode(1)
+    context = Unicode(1)
+    defaultuser = Unicode(1)
+    deny = Unicode(1)
+    disallow = Unicode(1)
+    dtmfmode = Unicode(1)
+    fromdomain = Unicode(1)
+    fromuser = Unicode(1)
+    fullcontact = Unicode(1)
     host = Unicode(1, index=True)
     id_cc_card = Integer32
-    incominglimit = Unicode(1, )
-    insecure = Unicode(1, )
+    incominglimit = Unicode(1)
+    insecure = Unicode(1)
     ipaddr = Unicode(1, index=True)
     language = Unicode(1)
     lastms = Unicode(1)
-    mailbox = Unicode(1, )
-    mask = Unicode(1, )
-    maxcallbitrate = Unicode(1, )
-    md5secret = Unicode(1, )
-    mohsuggest = Unicode(1, )
-    musicclass = Unicode(1, )
-    musiconhold = Unicode(1, )
+    mailbox = Unicode(1)
+    mask = Unicode(1)
+    maxcallbitrate = Unicode(1)
+    md5secret = Unicode(1)
+    mohsuggest = Unicode(1)
+    musicclass = Unicode(1)
+    musiconhold = Unicode(1)
     name = Unicode(1, unique=True)
     nat = Unicode(1)
-    outboundproxy = Unicode(1, )
+    outboundproxy = Unicode(1)
     permit = Unicode(1)
     pickupgroup = Unicode(1)
     port = Unicode(1, index=True)
     qualify = Unicode(1)
-    regexten = Unicode(1, )
+    regexten = Unicode(1)
     regseconds = Integer32
     regserver = Unicode(1)
     restrictcid = Unicode(1)
     rtpholdtimeout = Unicode(1)
-    rtpkeepalive = Unicode(1, )
+    rtpkeepalive = Unicode(1)
     rtptimeout = Unicode(1)
-    secret = Unicode(1, )
-    setvar = Unicode(1, )
-    subscribecontext = Unicode(1, )
-    subscribemwi = Unicode(1, )
-    type = Unicode(1, )
+    secret = Unicode(1)
+    setvar = Unicode(1)
+    subscribecontext = Unicode(1)
+    subscribemwi = Unicode(1)
+    type = Unicode(1)
     useragent = Unicode(1)
-    usereqphone = Unicode(1, )
-    username = Unicode(1, )
-    vmexten = Unicode(1, )
+    usereqphone = Unicode(1)
+    username = Unicode(1)
+    vmexten = Unicode(1)
 
 
 class SipBuddiesEmpty(TableModel):
     __tablename__ = 'cc_sip_buddies_empty'
 
     defaultip = Unicode(1, db_column='DEFAULTip')
-    accountcode = Unicode(1, )
-    allow = Unicode(1, )
+    accountcode = Unicode(1)
+    allow = Unicode(1)
     amaflags = Unicode(1)
-    callerid = Unicode(1, )
+    callerid = Unicode(1)
     callgroup = Unicode(1)
     cancallforward = Unicode(1)
-    canreinvite = Unicode(1, )
-    context = Unicode(1, )
-    deny = Unicode(1, )
-    disallow = Unicode(1, )
-    dtmfmode = Unicode(1, )
-    fromdomain = Unicode(1, )
-    fromuser = Unicode(1, )
-    fullcontact = Unicode(1, )
-    host = Unicode(1, )
+    canreinvite = Unicode(1)
+    context = Unicode(1)
+    deny = Unicode(1)
+    disallow = Unicode(1)
+    dtmfmode = Unicode(1)
+    fromdomain = Unicode(1)
+    fromuser = Unicode(1)
+    fullcontact = Unicode(1)
+    host = Unicode(1)
     id = Integer32(primary_key=True)
     id_cc_card = Integer32
-    insecure = Unicode(1, )
-    ipaddr = Unicode(1, )
+    insecure = Unicode(1)
+    ipaddr = Unicode(1)
     language = Unicode(1)
-    mailbox = Unicode(1, )
-    mask = Unicode(1, )
-    md5secret = Unicode(1, )
-    musiconhold = Unicode(1, )
-    name = Unicode(1, )
+    mailbox = Unicode(1)
+    mask = Unicode(1)
+    md5secret = Unicode(1)
+    musiconhold = Unicode(1)
+    name = Unicode(1)
     nat = Unicode(1)
     permit = Unicode(1)
     pickupgroup = Unicode(1)
-    port = Unicode(1, )
+    port = Unicode(1)
     qualify = Unicode(1)
-    regexten = Unicode(1, )
+    regexten = Unicode(1)
     regseconds = Integer32
     restrictcid = Unicode(1)
     rtpholdtimeout = Unicode(1)
     rtptimeout = Unicode(1)
-    secret = Unicode(1, )
-    setvar = Unicode(1, )
-    type = Unicode(1, )
-    username = Unicode(1, )
+    secret = Unicode(1)
+    setvar = Unicode(1)
+    type = Unicode(1)
+    username = Unicode(1)
 
 
 class Speeddial(TableModel):
@@ -1391,8 +1391,8 @@ class Speeddial(TableModel):
     creationdate = Date
     id = Integer64(primary_key=True)
     id_cc_card = Integer64
-    name = Unicode(1, )
-    phone = Unicode(1, )
+    name = Unicode(1)
+    phone = Unicode(1)
     speeddial = Integer32
 
 
@@ -1410,10 +1410,10 @@ class SubscriptionService(TableModel):
 
     datecreate = Date
     datelastrun = Date
-    emailreport = Unicode(1, )
+    emailreport = Unicode(1)
     fee = Float
     id = Integer64(primary_key=True)
-    label = Unicode(1, )
+    label = Unicode(1)
     numberofrun = Integer32
     startdate = Date
     status = Integer32
@@ -1430,7 +1430,7 @@ class SubscriptionSignup(TableModel):
     id = Integer64(primary_key=True)
     id_callplan = Integer64
     id_subscription = Integer64
-    label = Unicode(1, )
+    label = Unicode(1)
 
 
 class Support(TableModel):
@@ -1438,8 +1438,8 @@ class Support(TableModel):
 
     id = Integer32(primary_key=True)
     email = Unicode(1)
-    language = Unicode(1, )
-    name = Unicode(1, )
+    language = Unicode(1)
+    name = Unicode(1)
 
 
 class SupportComponent(TableModel):
@@ -1448,7 +1448,7 @@ class SupportComponent(TableModel):
     id = Integer32(primary_key=True)
     activated = Integer32
     id_support = Integer32
-    name = Unicode(1, )
+    name = Unicode(1)
     type_user = Integer32
 
 
@@ -1478,7 +1478,7 @@ class Tariffgroup(TableModel):
     iduser = Integer32
     lcrtype = Integer32
     removeinterprefix = Integer32
-    tariffgroupname = Unicode(1, )
+    tariffgroupname = Unicode(1)
 
 
 class TariffgroupPlan(TableModel):
@@ -1491,10 +1491,10 @@ class Tariffplan(TableModel):
     __tablename__ = 'cc_tariffplan'
 
     id = Integer32(primary_key=True)
-    calleridprefix = Unicode(1, )
+    calleridprefix = Unicode(1)
     creationdate = Date
     description = Unicode
-    dnidprefix = Unicode(1, )
+    dnidprefix = Unicode(1)
     expirationdate = Date
     id_trunk = Integer32
     idowner = Integer32
@@ -1504,7 +1504,7 @@ class Tariffplan(TableModel):
     secondusedratecard = Integer32
     secondusedreal = Integer32
     startingdate = Date
-    tariffname = Unicode(1, )
+    tariffname = Unicode(1)
 
 class Templatemail(TableModel):
     __tablename__ = 'cc_templatemail'
@@ -1512,7 +1512,7 @@ class Templatemail(TableModel):
     id = Integer32(primary_key=True)
     fromemail = Unicode(1)
     fromname = Unicode(1)
-    id_language = Unicode(1, )
+    id_language = Unicode(1)
     mailtype = Unicode(1)
     messagehtml = Unicode(1)
     messagetext = Unicode(1)
@@ -1529,7 +1529,7 @@ class Ticket(TableModel):
     id_component = Integer32
     priority = Integer32
     status = Integer32
-    title = Unicode(1, )
+    title = Unicode(1)
     viewed_admin = Integer32
     viewed_agent = Integer32
     viewed_cust = Integer32
@@ -1568,8 +1568,8 @@ class Trunk(TableModel):
     if_max_use = Integer32
     inuse = Integer32
     maxuse = Integer32
-    providerip = Unicode(1, )
-    providertech = Unicode(1, )
+    providerip = Unicode(1)
+    providertech = Unicode(1)
     removeprefix = Unicode(1)
     secondusedcarrier = Integer32
     secondusedratecard = Integer32
@@ -1594,7 +1594,7 @@ class UiAuthen(TableModel):
     name = Unicode(1)
     perms = Integer32
     phone = Unicode(1)
-    pwd_encoded = Unicode(1, )
+    pwd_encoded = Unicode(1)
     state = Unicode(1)
     userid = Integer64(primary_key=True)
     zipcode = Unicode(1)
@@ -1605,13 +1605,13 @@ class Version(TableModel):
     __tablename__ = 'cc_version'
 
     id = Integer32(primary_key=True)
-    version = Unicode(1, )
+    version = Unicode(1)
 
 
 class Voucher(TableModel):
     __tablename__ = 'cc_voucher'
 
-    activated = Unicode(1, )
+    activated = Unicode(1)
     creationdate = Date
     credit = Float
     currency = Unicode(1)
@@ -1630,17 +1630,17 @@ class Cdrs(TableModel):
     cdr = Integer64(db_column='cdr_id', primary_key=True)
     cost = Integer32
     created = Date
-    dst_domain = Unicode(1, )
-    dst_ousername = Unicode(1, )
-    dst_username = Unicode(1, )
+    dst_domain = Unicode(1)
+    dst_ousername = Unicode(1)
+    dst_username = Unicode(1)
     duration = Integer32
     rated = Integer32
     sip_call = Unicode(1, db_column='sip_call_id')
-    sip_from_tag = Unicode(1, )
-    sip_to_tag = Unicode(1, )
-    src_domain = Unicode(1, )
-    src_ip = Unicode(1, )
-    src_username = Unicode(1, )
+    sip_from_tag = Unicode(1)
+    sip_to_tag = Unicode(1)
+    src_domain = Unicode(1)
+    src_ip = Unicode(1)
+    src_username = Unicode(1)
 
 
 
@@ -1650,21 +1650,21 @@ class CollectionCdrs(TableModel):
     call_start_time = Date
     cdr = Integer64(db_column='cdr_id')
     cost = Integer32
-    dst_domain = Unicode(1, )
-    dst_ousername = Unicode(1, )
-    dst_username = Unicode(1, )
+    dst_domain = Unicode(1)
+    dst_ousername = Unicode(1)
+    dst_username = Unicode(1)
     duration = Integer32
     flag_imported = Integer32
     id = Integer64(primary_key=True)
     rated = Integer32
     sip_call = Unicode(1, db_column='sip_call_id')
-    sip_code = Unicode(1, )
-    sip_from_tag = Unicode(1, )
-    sip_reason = Unicode(1, )
-    sip_to_tag = Unicode(1, )
-    src_domain = Unicode(1, )
-    src_ip = Unicode(1, )
-    src_username = Unicode(1, )
+    sip_code = Unicode(1)
+    sip_from_tag = Unicode(1)
+    sip_reason = Unicode(1)
+    sip_to_tag = Unicode(1)
+    src_domain = Unicode(1)
+    src_ip = Unicode(1)
+    src_username = Unicode(1)
 
 
 class MissedCalls(TableModel):
@@ -1673,18 +1673,18 @@ class MissedCalls(TableModel):
     id = Integer32(primary_key=True)
     callid = Unicode(1, index=True)
     cdr = Integer32(db_column='cdr_id')
-    dst_domain = Unicode(1, )
-    dst_ouser = Unicode(1, )
-    dst_user = Unicode(1, )
-    from_tag = Unicode(1, )
-    method = Unicode(1, )
-    sip_code = Unicode(1, )
-    sip_reason = Unicode(1, )
-    src_domain = Unicode(1, )
-    src_ip = Unicode(1, )
-    src_user = Unicode(1, )
+    dst_domain = Unicode(1)
+    dst_ouser = Unicode(1)
+    dst_user = Unicode(1)
+    from_tag = Unicode(1)
+    method = Unicode(1)
+    sip_code = Unicode(1)
+    sip_reason = Unicode(1)
+    src_domain = Unicode(1)
+    src_ip = Unicode(1)
+    src_user = Unicode(1)
     time = Date
-    to_tag = Unicode(1, )
+    to_tag = Unicode(1)
 
 
 class Note(TableModel):
@@ -1702,5 +1702,5 @@ class User(TableModel):
     active = Integer32
     admin = Integer32
     email = Unicode(1, unique=True)
-    password = Unicode(1, )
+    password = Unicode(1)
     username = Unicode(1, unique=True)
