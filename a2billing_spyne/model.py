@@ -52,6 +52,7 @@ class CardGroup(TableModel):
 
 class Card(TableModel):
     __tablename__ = 'cc_card'
+thy
 
     id = Integer64(primary_key=True)
     # user = ForeignKeyField(User, related_name='tweets')
@@ -1705,3 +1706,52 @@ class User(TableModel):
     password = Unicode(1, )
     username = Unicode(1, unique=True)
 
+class SipBuddies(TableModel):
+    __tablename__:'sip_buddies'
+
+    id = Integer64(primary key=True)
+    name = Unicode(80, nullable=False, default='')
+    host = Unicode(31, nullable=False, default='')
+    nat = Unicode(5, nullable=False, default='no')
+    type = Unicode(10, nullable=False, default='friend')
+    accountcode = Unicode(20, default=NULL)
+    amaflags = Unicode(13, default=NULL)
+    call_limit = Integer32(default=NULL)
+    callgroup = Unicode(10, default=NULL)
+    callerid = Unicode(80, default=NULL)
+    cancallforward = Unicode(3, default='yes')
+    canreinvite = Unicode(3, default='yes')
+    context = Unicode(80, default=NULL)
+    defaultip = Unicode(15, default=NULL)
+    dtmfmode = Unicode(7, default=NULL)
+    fromuser = Unicode(80, default=NULL)
+    fromdomain = Unicode(80, default=NULL)
+    insecure = Unicode(4, default=NULL)
+    language = Unicode(2, default=NULL)
+    mailbox = Unicode(50, default=NULL)
+    md5secret = Unicode(80, default=NULL)
+    deny = Unicode(95, default=NULL)
+    permit = Unicode(95, default=NULL)
+    mask = Unicode(95, default=NULL)
+    musiconhold = Unicode(100, default=NULL)
+    pickupgroup = Unicode(10, default=NULL)
+    qualify = Unicode(3, default=NULL)
+    regexten = Unicode(80, default=NULL)
+    restrictcid = Unicode(3, default=NULL)
+    rtptimeout = Unicode(3, default=NULL)
+    rtpholdtimeout = Unicode(3, default=NULL)
+    secret = Unicode(80, default=NULL)
+    setvar = Unicode(100, default=NULL)
+    disallow = Unicode(100, default='all')
+    allow = Unicode(100, default='g729;ilbc;gsm;ulaw;alaw')
+    fullcontact = Unicode(80, nullable=False, default='')
+    ipaddr = Unicode(45, nullable=False, default='')
+    port = Integer32(nullable=False, default='0')
+    regserver = Unicode(100, default=NULL)
+    regseconds = Integer32(nullable=False, default='0')
+    lastms = Integer32(nullable=False, default='0')
+    username = Unicode(80, nullable=False, default='')
+    defaultuser = Unicode(80, nullable=False, default='')
+    subscribecontext = Unicode(80, default=NULL) 
+    callbackextension = Unicode
+    useragent = Unicode(20, default=NULL) 
