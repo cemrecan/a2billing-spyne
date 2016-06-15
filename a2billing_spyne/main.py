@@ -34,15 +34,20 @@
 
 from __future__ import print_function
 
+from contextlib import closing
+
 import logging
 logger = logging.getLogger(__name__)
 
 
-from neurons.daemon import ServiceDaemon
-
-
 def bootstrap(config):
-    logger.debug("This is bootstrap.")
+    from neurons import TableModel
+    import a2billing_spyne.model
+
+    db = config.get_main_store()
+    with closing(db.Session()) as session:
+        TableModel.Attributes.sqla_metadata.create_all(checkfirst=True)
+        session.commit()
 
 
 def init(config):
@@ -57,6 +62,7 @@ def init(config):
 
 def main():
     import sys
+    from neurons.daemon import ServiceDaemon
     from neurons.daemon.main import main as neurons_main
     return neurons_main('a2billing-spyne',
                                    sys.argv, init, bootstrap, cls=ServiceDaemon)

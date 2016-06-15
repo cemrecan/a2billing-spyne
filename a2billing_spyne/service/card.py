@@ -32,13 +32,37 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+
+from contextlib import closing
+
+from twisted.internet.threads import deferToThread
+
 from spyne import rpc
 
+from neurons.form import HtmlForm
+
 from a2billing_spyne.model import Card
-from a2billing_spyne.service import ReaderServiceBase
+from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
+
+
+class NewCardScreen(ScreenBase):
+    main = Card.customize(prot=HtmlForm(), form_action="put_card")
+
+
+class CardDal(DalBase):
+    def put_card(self, card):
+        with closing(self.ctx.app.config.get_main_store().Session()) as session:
+            session.add(card)
+            session.commit()
 
 
 class CardReaderServices(ReaderServiceBase):
-    @rpc(Card, _returns=Card)
-    def echo_card(self, card):
-        return card
+    @rpc(Card, _returns=NewCardScreen, _body_style='bare')
+    def new_card(ctx, card):
+        return NewCardScreen(title="Echo Card", main=card)
+
+
+class CardWriterServices(ReaderServiceBase):
+    @rpc(Card, _body_style='bare')
+    def put_card(ctx, card):
+        return deferToThread(CardDal(ctx).put_card, card)

@@ -32,18 +32,33 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-from spyne import rpc, Unicode
+from spyne import rpc, Unicode, ComplexModel
 
 from neurons.base.service import TReaderServiceBase
 from neurons.base.service import TWriterServiceBase
 from neurons.log.model import TLogEntry
+
+from a2billing_spyne.const import T_INDEX
 
 LogEntry = TLogEntry()
 ReaderServiceBase = TReaderServiceBase(LogEntry)
 WriterServiceBase = TWriterServiceBase(LogEntry)
 
 
+class ScreenBase(ComplexModel):
+    class Attributes(ComplexModel.Attributes):
+        html_cloth = T_INDEX
+
+    title = Unicode
+
+
+class DalBase(object):
+    def __init__(self, ctx):
+        self.ctx = ctx
+
+
 class TestServices(ReaderServiceBase):
     @rpc(Unicode, _returns=Unicode)
     def echo_string(self, s):
         return s
+

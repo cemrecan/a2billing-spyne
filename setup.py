@@ -42,7 +42,9 @@ setup(
 
     include_package_data=True,
     package_data={
-
+        "a2billing_spyne.const": [
+            "index.html",
+        ],
     },
 
     entry_points = {
