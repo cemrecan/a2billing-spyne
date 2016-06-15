@@ -46,7 +46,12 @@ from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
 
 
 class NewSipScreen(ScreenBase):
-    main = SipBuddies.customize(prot=HtmlForm(), form_action="put_sip")
+    main = SipBuddies.customize(
+        prot=HtmlForm(), form_action="put_sip",
+        child_attrs=dict(
+            id=dict(order=0, write=False),
+        ),
+    )
 
 
 class SipDal(DalBase):
@@ -58,7 +63,7 @@ class SipDal(DalBase):
 
 class SipReaderServices(ReaderServiceBase):
     @rpc(SipBuddies, _returns=NewSipScreen, _body_style='bare')
-    def new_sip(ctx, sip):
+    def new_sip_buddy(ctx, sip):
         return NewSipScreen(title="Echo Sip", main=sip)
 
 
