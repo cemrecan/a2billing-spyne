@@ -1,0 +1,99 @@
+input {
+  -webkit-transition: border, 100ms;
+  transition: border, 100ms;
+  font-size: 1em;
+  font-family: 'Open Sans', helvetica, sans-serif;
+  line-height: 1.5em;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  padding: .5em 1em;
+  border: none;
+  background: #e2e2e2;
+  display: block;
+  margin: .5em 0;
+}
+input:focus {
+  border-left: 0.5em solid tomato;
+}
+input:focus {
+  color: #333;
+}
+input:focus {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: none;
+  background: url('images/bg-stripes.png');
+}
+ 
+input[type="email"],
+input[type="password"] {
+  width: 50%;
+}
+ 
+input[type="text"] {
+  width: 100%;
+}
+
+input[type="submit"] {
+  -webkit-transition-property: background-color, color;
+  transition-property: background-color, color;
+  -webkit-transition-duration: 200ms;
+  transition-duration: 200ms;
+  display: block;
+  margin: 0 auto;
+  padding: .5em 2em;
+  width: 50%;
+  border: none;
+  border-radius: 0.3em;
+  background-color: grey;
+  color: white;
+  font-size: 1em;
+}
+input[type="submit"]:hover, input[type="submit"]:active, input[type="submit"]:focus {
+  background-color: tomato;
+  color: white;
+}
+
+
+::-moz-focus-inner {
+  border: 0;
+}
+ 
+*::-moz-selection {
+  background-color: tomato;
+  color:white
+}
+ 
+*::selection {
+  background-color: tomato;
+  color:white
+}
+ 
+body {
+  background: #d7d7d7;
+  color: darkslategray;
+  font-family: 'Open Sans', helvetica, sans-serif;
+}
+ 
+form {
+  margin: 4em auto;
+  padding: 1em;
+  max-width: 640px;
+  background: white;
+  border-radius: 0.25em;
+}
+ 
+legend {
+  display: block;
+  margin: 0 auto;
+}
+ 
+label {
+  display: inline-block;
+  margin: .5em 0;
+}
+
+
