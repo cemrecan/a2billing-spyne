@@ -53,6 +53,13 @@ class NewSipScreen(ScreenBase):
         ),
         child_attrs=dict(
             id=dict(order=0, write=False, exc=False),
+            callerid=dict(order=1, exc=False),
+            context=dict(order=2, write=False, exc=False),
+            dtmfmode=dict(order=3, exc=False),
+            host=dict(order=4, write=False, exc=False),
+            secret=dict(order=5, exc=False),
+            type=dict(order=6, exc=False),
+            username=dict(order=7, exc=False),
         ),
     )
 
@@ -62,6 +69,8 @@ class SipDal(DalBase):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
             session.add(sip)
             session.commit()
+
+
 
 
 class SipReaderServices(ReaderServiceBase):
