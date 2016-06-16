@@ -48,8 +48,11 @@ from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
 class NewSipScreen(ScreenBase):
     main = SipBuddies.customize(
         prot=HtmlForm(), form_action="put_sip",
+        child_attrs_all=dict(
+            exc=True,
+        ),
         child_attrs=dict(
-            id=dict(order=0, write=False),
+            id=dict(order=0, write=False, exc=False),
         ),
     )
 
