@@ -35,7 +35,8 @@
 
 from datetime import date
 
-from spyne import table, Unicode, Date, Integer32, Float, Integer64, Decimal, Time
+from spyne import M, table, Unicode, Date, Integer32, Float, Integer64, \
+    Decimal, Time
 
 from neurons.model import TableModel
 
@@ -1315,7 +1316,7 @@ class SipBuddies(TableModel):
     mohsuggest = Unicode(1)
     musicclass = Unicode(1)
     musiconhold = Unicode(1)
-    name = Unicode(1, unique=True)
+    name = M(Unicode(64, unique=True))
     nat = Unicode(1)
     outboundproxy = Unicode(1)
     permit = Unicode(1)
