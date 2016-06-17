@@ -772,6 +772,16 @@ class EpaymentLogAgent(TableModel):
     transaction_detail = Unicode
     vat = Float
 
+class Extensions(TableModel):
+    __tablename__= 'cc_extension'
+
+    id = Integer32(primary_key=True)
+    context = Unicode(20, default='home')
+    exten = Unicode(20, default='')
+    priority = Integer32(4, default=0)
+    app = Unicode(20, default='Dial')
+    appdata= Unicode(128, default='')
+
 
 class IaxBuddies(TableModel):
     __tablename__ = 'cc_iax_buddies'
@@ -1705,3 +1715,4 @@ class User(TableModel):
     email = Unicode(1, unique=True)
     password = Unicode(1)
     username = Unicode(1, unique=True)
+
