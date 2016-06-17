@@ -71,6 +71,7 @@ class NewSipDetailScreen(ScreenBase):
 class SipDal(DalBase):
     def put_sip(self, sip):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
+            sip.qualify = 'yes'
             session.add(sip)
             session.commit()
 
@@ -79,11 +80,13 @@ class SipDal(DalBase):
             return session.query(SipBuddies).filter(SipBuddies.id == sip.id).one()
 
 class SipReaderServices(ReaderServiceBase):
-    @rpc(SipBuddies, _returns=NewSipBuddyScreen, _body_style='bare')
+    @rpc(SipBuddies.novalidate_freq(), _returns=NewSipBuddyScreen,
+         _body_style='bare')
     def new_sip_buddy(ctx, sip):
         return NewSipBuddyScreen(title="New Sip Buddy", main=sip)
 
-    @rpc(SipBuddies, _returns=NewSipBuddyScreen, _body_style='bare')
+    @rpc(SipBuddies.novalidate_freq(), _returns=NewSipBuddyScreen,
+         _body_style='bare')
     def get_sip_detail(ctx,sip):
         return deferToThread(SipDal(ctx).get_sip, sip) \
             .addCallback(lambda ret:

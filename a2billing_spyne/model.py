@@ -1295,20 +1295,20 @@ class SipBuddies(TableModel):
     canreinvite = Unicode(1)
     cid_number = Unicode(1)
     context = Unicode(10, default='home')
-    defaultuser = Unicode(1)
+    defaultuser = Unicode(64)
     deny = Unicode(1)
     disallow = Unicode(1)
     dtmfmode = Unicode(10, default='rfc2833', values={'info', 'inband', 'rfc2833', 'auto'})
     fromdomain = Unicode(1)
     fromuser = Unicode(1)
-    fullcontact = Unicode(1)
+    fullcontact = Unicode
     host = Unicode(10, index=True, default='dynamic')
     id_cc_card = Integer32
     incominglimit = Unicode(1)
     insecure = Unicode(1)
-    ipaddr = Unicode(1, index=True)
+    ipaddr = Unicode(15, index=True)
     language = Unicode(1)
-    lastms = Unicode(1)
+    lastms = Unicode
     mailbox = Unicode(1)
     mask = Unicode(1)
     maxcallbitrate = Unicode(1)
@@ -1321,8 +1321,8 @@ class SipBuddies(TableModel):
     outboundproxy = Unicode(1)
     permit = Unicode(1)
     pickupgroup = Unicode(1)
-    port = Unicode(1, index=True)
-    qualify = Unicode(1)
+    port = Integer32
+    qualify = Unicode(3, defult='yes', values={'yes','no'})
     regexten = Unicode(1)
     regseconds = Integer32
     regserver = Unicode(1)
@@ -1335,7 +1335,7 @@ class SipBuddies(TableModel):
     subscribecontext = Unicode(1)
     subscribemwi = Unicode(1)
     type = Unicode(10, default='friend', values={'friend','peer','user'})
-    useragent = Unicode(1)
+    useragent = Unicode
     usereqphone = Unicode(1)
     username = Unicode(64)
     vmexten = Unicode(1)
