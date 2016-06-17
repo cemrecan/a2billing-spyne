@@ -45,8 +45,7 @@ from a2billing_spyne.model import SipBuddies
 from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
 
 
-class NewSipScreen(ScreenBase):
-    main = SipBuddies.customize(
+SipBuddyScreen = SipBuddies.customize(
         prot=HtmlForm(), form_action="put_sip",
         child_attrs_all=dict(
             exc=True,
@@ -63,6 +62,11 @@ class NewSipScreen(ScreenBase):
         ),
     )
 
+class NewSipBuddyScreen(ScreenBase):
+    main = SipBuddyScreen
+
+class NewSipDetailScreen(ScreenBase):
+    main = SipBuddyScreen
 
 class SipDal(DalBase):
     def put_sip(self, sip):
@@ -70,13 +74,22 @@ class SipDal(DalBase):
             session.add(sip)
             session.commit()
 
+    def get_sip(self, sip):
+        with closing(self.ctx.app.config.get_main_store().Session()) as session:
+            return session.query(SipBuddies).filter(SipBuddies.id == sip.id).one()
 
 
 
 class SipReaderServices(ReaderServiceBase):
-    @rpc(SipBuddies, _returns=NewSipScreen, _body_style='bare')
+    @rpc(SipBuddies, _returns=NewSipBuddyScreen, _body_style='bare')
     def new_sip_buddy(ctx, sip):
-        return NewSipScreen(title="Echo Sip", main=sip)
+        return NewSipBuddyScreen(title="New Sip Buddy", main=sip)
+
+    @rpc(SipBuddies, _returns=NewSipBuddyScreen, _body_style='bare')
+    def get_sip_detail(ctx,sip):
+        return deferToThread(SipDal(ctx).get_sip, sip) \
+            .addCallback(lambda ret:
+                         NewSipDetailScreen(title="Get Sip Buddy", main=ret))
 
 
 class SipWriterServices(ReaderServiceBase):
