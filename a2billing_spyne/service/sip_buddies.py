@@ -52,13 +52,13 @@ SipBuddyScreen = SipBuddies.customize(
         ),
         child_attrs=dict(
             id=dict(order=0, write=False, exc=False),
-            callerid=dict(order=1, exc=False),
-            context=dict(order=2, write=False, exc=False),
-            dtmfmode=dict(order=3, exc=False),
-            host=dict(order=4, write=False, exc=False),
-            secret=dict(order=5, exc=False),
-            type=dict(order=6, exc=False),
-            username=dict(order=7, exc=False),
+            name=dict(order=1, exc=False),
+            callerid=dict(order=2, exc=False),
+            context=dict(order=3, write=False, exc=False),
+            dtmfmode=dict(order=4, exc=False),
+            host=dict(order=5, write=False, exc=False),
+            secret=dict(order=6, exc=False),
+            type=dict(order=7, exc=False),
         ),
     )
 
@@ -77,8 +77,6 @@ class SipDal(DalBase):
     def get_sip(self, sip):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
             return session.query(SipBuddies).filter(SipBuddies.id == sip.id).one()
-
-
 
 class SipReaderServices(ReaderServiceBase):
     @rpc(SipBuddies, _returns=NewSipBuddyScreen, _body_style='bare')
