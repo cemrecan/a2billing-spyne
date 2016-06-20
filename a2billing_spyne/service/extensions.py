@@ -45,8 +45,7 @@ from a2billing_spyne.model import Extensions
 from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
 
 
-class NewExtScreen(ScreenBase):
-    main = Extensions.customize(prot=HtmlForm(), form_action="put_ext",
+ExtScreen = Extensions.customize(prot=HtmlForm(), form_action="put_ext",
 
                                 child_attrs_all=dict(
                                     exc=False,
@@ -62,6 +61,12 @@ class NewExtScreen(ScreenBase):
                                 ),
                                 )
 
+class NewExtScreen(ScreenBase):
+    main = ExtScreen
+
+class NewExtDetailScreen(ScreenBase):
+    main = ExtScreen
+
 
 class ExtDal(DalBase):
     def put_ext(self, ext):
@@ -69,11 +74,22 @@ class ExtDal(DalBase):
             session.add(ext)
             session.commit()
 
+    def get_ext(selfself,ext):
+        with closing(self.ctx.app.config.get_main_store().Session()) as session:
+            return session.query(Extensions).filter(Extensions.id ==
+                                                                    ext.id).one()
 
 class ExtReaderServices(ReaderServiceBase):
     @rpc(Extensions.novalidate_freq(), _returns=NewExtScreen, _body_style='bare')
     def new_ext(ctx, ext):
         return NewExtScreen(title="New Extension", main=ext)
+
+    @rpc(Extensions.novalidate_freq(), _returns=NewExtScreen,
+         _body_style='bare')
+    def get_ext_detail(ctx, ext):
+        return deferToThread(ExtDal(ctx).get_ext, ext) \
+            .addCallback(lambda ret:
+                         NewExtDetailScreen(title="Get Extension", main=ret))
 
 
 class ExtWriterServices(ReaderServiceBase):
