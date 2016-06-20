@@ -41,28 +41,31 @@ from spyne import rpc
 
 from neurons.form import HtmlForm
 
+from spyne.const.http import HTTP_302
+
 from a2billing_spyne.model import Extensions
 from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
 
+ExtScreen = Extensions.customize(
+    prot=HtmlForm(), form_action="put_ext",
+    child_attrs_all=dict(
+        exc=False,
+    ),
 
-ExtScreen = Extensions.customize(prot=HtmlForm(), form_action="put_ext",
+    child_attrs=dict(
+        id=dict(order=0, write=False),
+        exten=dict(order=1),
+        priority=dict(order=2),
+        app=dict(order=3),
+        appdata=dict(order=4),
+        context=dict(order=5)
+    ),
+)
 
-                                child_attrs_all=dict(
-                                    exc=False,
-                                ),
-
-                                child_attrs=dict(
-                                    id=dict(order=0, write=False),
-                                    exten=dict(order=1),
-                                    priority=dict(order=2),
-                                    app=dict(order=3),
-                                    appdata=dict(order=4),
-                                    context=dict(order=5)
-                                ),
-                                )
 
 class NewExtScreen(ScreenBase):
     main = ExtScreen
+
 
 class NewExtDetailScreen(ScreenBase):
     main = ExtScreen
@@ -73,26 +76,32 @@ class ExtDal(DalBase):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
             session.add(ext)
             session.commit()
+            return ext
 
-    def get_ext(selfself,ext):
+    def get_ext(self, ext):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
             return session.query(Extensions).filter(Extensions.id ==
-                                                                    ext.id).one()
+                                                    ext.id).one()
+
 
 class ExtReaderServices(ReaderServiceBase):
-    @rpc(Extensions.novalidate_freq(), _returns=NewExtScreen, _body_style='bare')
+    @rpc(Extensions.novalidate_freq(), _returns=NewExtScreen,
+                                                             _body_style='bare')
     def new_ext(ctx, ext):
         return NewExtScreen(title="New Extension", main=ext)
 
     @rpc(Extensions.novalidate_freq(), _returns=NewExtScreen,
-         _body_style='bare')
+                                                             _body_style='bare')
     def get_ext_detail(ctx, ext):
         return deferToThread(ExtDal(ctx).get_ext, ext) \
             .addCallback(lambda ret:
-                         NewExtDetailScreen(title="Get Extension", main=ret))
+                            NewExtDetailScreen(title="Get Extension", main=ret))
 
 
 class ExtWriterServices(ReaderServiceBase):
     @rpc(Extensions, _body_style='bare')
     def put_ext(ctx, ext):
-        return deferToThread(ExtDal(ctx).put_ext, ext)
+        return deferToThread(ExtDal(ctx).put_ext, ext) \
+            .addCallback(lambda ret: ctx.transport.respond(HTTP_302,
+                                            location="get_ext_detail?id=%d" %
+                                                     ret.id))

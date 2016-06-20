@@ -38,6 +38,7 @@ from contextlib import closing
 from twisted.internet.threads import deferToThread
 
 from spyne import rpc
+from spyne.const.http import HTTP_302
 
 from neurons.form import HtmlForm
 
@@ -62,11 +63,14 @@ SipBuddyScreen = SipBuddies.customize(
         ),
     )
 
+
 class NewSipBuddyScreen(ScreenBase):
     main = SipBuddyScreen
 
+
 class NewSipDetailScreen(ScreenBase):
     main = SipBuddyScreen
+
 
 class SipDal(DalBase):
     def put_sip(self, sip):
@@ -74,10 +78,12 @@ class SipDal(DalBase):
             sip.qualify = 'yes'
             session.add(sip)
             session.commit()
+            return sip
 
     def get_sip(self, sip):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
             return session.query(SipBuddies).filter(SipBuddies.id == sip.id).one()
+
 
 class SipReaderServices(ReaderServiceBase):
     @rpc(SipBuddies.novalidate_freq(), _returns=NewSipBuddyScreen,
@@ -96,4 +102,6 @@ class SipReaderServices(ReaderServiceBase):
 class SipWriterServices(ReaderServiceBase):
     @rpc(SipBuddies, _body_style='bare')
     def put_sip(ctx, sip):
-        return deferToThread(SipDal(ctx).put_sip, sip)
+        return deferToThread(SipDal(ctx).put_sip, sip) \
+            .addCallback(lambda ret: ctx.transport.respond(HTTP_302,
+                                      location="get_sip_detail?id=%d" % ret.id))
