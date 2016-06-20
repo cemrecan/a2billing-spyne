@@ -46,21 +46,22 @@ from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
 
 
 class NewExtScreen(ScreenBase):
-    main = Extensions.customize(prot=HtmlForm(), form_action="put_ext",
+    main = Extensions.customize(
+        prot=HtmlForm(), form_action="put_ext",
 
-                                child_attrs_all=dict(
-                                    exc=False,
-                                ),
+        child_attrs_all=dict(
+            exc=False,
+        ),
 
-                                child_attrs=dict(
-                                    id=dict(order=0, write=False),
-                                    exten=dict(order=1),
-                                    priority=dict(order=2),
-                                    app=dict(order=3),
-                                    appdata=dict(order=4),
-                                    context=dict(order=5)
-                                ),
-                                )
+        child_attrs=dict(
+            id=dict(order=0, write=False),
+            exten=dict(order=1),
+            priority=dict(order=2),
+            app=dict(order=3),
+            appdata=dict(order=4),
+            context=dict(order=5)
+        ),
+    )
 
 
 class ExtDal(DalBase):
