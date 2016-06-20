@@ -38,6 +38,7 @@ from contextlib import closing
 from twisted.internet.threads import deferToThread
 
 from spyne import rpc
+from spyne.const.http import HTTP_302
 
 from neurons.form import HtmlForm
 
@@ -69,6 +70,7 @@ class ExtDal(DalBase):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
             session.add(ext)
             session.commit()
+            return ext
 
 
 class ExtReaderServices(ReaderServiceBase):
@@ -80,4 +82,6 @@ class ExtReaderServices(ReaderServiceBase):
 class ExtWriterServices(ReaderServiceBase):
     @rpc(Extensions, _body_style='bare')
     def put_ext(ctx, ext):
-        return deferToThread(ExtDal(ctx).put_ext, ext)
+        return deferToThread(ExtDal(ctx).put_ext, ext) \
+            .addCallback(lambda ret: ctx.transport.respond(HTTP_302,
+                                         location="get_ext?id=%d" % ret.id)) \
