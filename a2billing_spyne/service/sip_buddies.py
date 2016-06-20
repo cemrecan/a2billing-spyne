@@ -100,4 +100,4 @@ class SipWriterServices(ReaderServiceBase):
     def put_sip(ctx, sip):
         return deferToThread(SipDal(ctx).put_sip, sip) \
             .addCallback(lambda ret: ctx.transport.respond(HTTP_302,
-                                                location="user?id=%d" % ret.id))
+                                      location="get_sip_detail?id=%d" % ret.id))
