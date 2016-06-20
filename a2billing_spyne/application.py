@@ -51,6 +51,7 @@ from neurons.daemon.config import StaticFileServer, HttpListener
 from a2billing_spyne.service import TestServices
 from a2billing_spyne.service.card import CardReaderServices, CardWriterServices
 from a2billing_spyne.service.sip_buddies import SipReaderServices, SipWriterServices
+from a2billing_spyne.service.extensions import ExtReaderServices, ExtWriterServices
 
 
 def start_a2bs(config):
@@ -70,6 +71,8 @@ def start_a2bs(config):
         TestServices,
         CardReaderServices, CardWriterServices,
         SipReaderServices, SipWriterServices,
+        ExtReaderServices, ExtWriterServices,
+
     ]
 
     subconfig.subapps['json'] = \

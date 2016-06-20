@@ -38,66 +38,45 @@ from contextlib import closing
 from twisted.internet.threads import deferToThread
 
 from spyne import rpc
-from spyne.const.http import HTTP_302
 
 from neurons.form import HtmlForm
 
-from a2billing_spyne.model import SipBuddies
+from a2billing_spyne.model import Extensions
 from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
 
 
-SipBuddyScreen = SipBuddies.customize(
-        prot=HtmlForm(), form_action="put_sip",
-        child_attrs_all=dict(
-            exc=True,
-        ),
-        child_attrs=dict(
-            id=dict(order=0, write=False, exc=False),
-            name=dict(order=1, exc=False),
-            callerid=dict(order=2, exc=False),
-            context=dict(order=3, write=False, exc=False),
-            dtmfmode=dict(order=4, exc=False),
-            host=dict(order=5, write=False, exc=False),
-            secret=dict(order=6, exc=False),
-            type=dict(order=7, exc=False),
-        ),
-    )
+class NewExtScreen(ScreenBase):
+    main = Extensions.customize(prot=HtmlForm(), form_action="put_ext",
 
-class NewSipBuddyScreen(ScreenBase):
-    main = SipBuddyScreen
+                                child_attrs_all=dict(
+                                    exc=False,
+                                ),
 
-class NewSipDetailScreen(ScreenBase):
-    main = SipBuddyScreen
+                                child_attrs=dict(
+                                    id=dict(order=0, write=False),
+                                    exten=dict(order=1),
+                                    priority=dict(order=2),
+                                    app=dict(order=3),
+                                    appdata=dict(order=4),
+                                    context=dict(order=5)
+                                ),
+                                )
 
-class SipDal(DalBase):
-    def put_sip(self, sip):
+
+class ExtDal(DalBase):
+    def put_ext(self, ext):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
-            sip.qualify = 'yes'
-            session.add(sip)
+            session.add(ext)
             session.commit()
-            return sip
-
-    def get_sip(self, sip):
-        with closing(self.ctx.app.config.get_main_store().Session()) as session:
-            return session.query(SipBuddies).filter(SipBuddies.id == sip.id).one()
-
-class SipReaderServices(ReaderServiceBase):
-    @rpc(SipBuddies.novalidate_freq(), _returns=NewSipBuddyScreen,
-         _body_style='bare')
-    def new_sip_buddy(ctx, sip):
-        return NewSipBuddyScreen(title="New Sip Buddy", main=sip)
-
-    @rpc(SipBuddies.novalidate_freq(), _returns=NewSipBuddyScreen,
-         _body_style='bare')
-    def get_sip_detail(ctx,sip):
-        return deferToThread(SipDal(ctx).get_sip, sip) \
-            .addCallback(lambda ret:
-                         NewSipDetailScreen(title="Get Sip Buddy", main=ret))
 
 
-class SipWriterServices(ReaderServiceBase):
-    @rpc(SipBuddies, _body_style='bare')
-    def put_sip(ctx, sip):
-        return deferToThread(SipDal(ctx).put_sip, sip) \
-            .addCallback(lambda ret: ctx.transport.respond(HTTP_302,
-                                                location="user?id=%d" % ret.id))
+class ExtReaderServices(ReaderServiceBase):
+    @rpc(Extensions.novalidate_freq(), _returns=NewExtScreen, _body_style='bare')
+    def new_ext(ctx, ext):
+        return NewExtScreen(title="New Extension", main=ext)
+
+
+class ExtWriterServices(ReaderServiceBase):
+    @rpc(Extensions, _body_style='bare')
+    def put_ext(ctx, ext):
+        return deferToThread(ExtDal(ctx).put_ext, ext)
