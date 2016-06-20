@@ -74,7 +74,8 @@ class ExtDal(DalBase):
 
 
 class ExtReaderServices(ReaderServiceBase):
-    @rpc(Extensions.novalidate_freq(), _returns=NewExtScreen, _body_style='bare')
+    @rpc(Extensions.novalidate_freq(), _returns=NewExtScreen,
+                                                             _body_style='bare')
     def new_ext(ctx, ext):
         return NewExtScreen(title="New Extension", main=ext)
 

@@ -63,11 +63,14 @@ SipBuddyScreen = SipBuddies.customize(
         ),
     )
 
+
 class NewSipBuddyScreen(ScreenBase):
     main = SipBuddyScreen
 
+
 class NewSipDetailScreen(ScreenBase):
     main = SipBuddyScreen
+
 
 class SipDal(DalBase):
     def put_sip(self, sip):
@@ -80,6 +83,7 @@ class SipDal(DalBase):
     def get_sip(self, sip):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
             return session.query(SipBuddies).filter(SipBuddies.id == sip.id).one()
+
 
 class SipReaderServices(ReaderServiceBase):
     @rpc(SipBuddies.novalidate_freq(), _returns=NewSipBuddyScreen,
