@@ -32,7 +32,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-from spyne import rpc, Unicode, ComplexModel
+from lxml.html.builder import E
+
+from spyne import rpc, Unicode, ComplexModel, AnyHtml
 
 from neurons.base.service import TReaderServiceBase
 from neurons.base.service import TWriterServiceBase
@@ -58,7 +60,10 @@ class DalBase(object):
 
 
 class TestServices(ReaderServiceBase):
-    @rpc(Unicode, _returns=Unicode)
-    def echo_string(self, s):
-        return s
-
+    @rpc(_in_message_name="", _returns=AnyHtml)
+    def index(self):
+        return E.div(
+            E.p(E.a("Cards", href="/get_all_card")),
+            E.p(E.a("Sip Buddies", href="/get_all_sip_buddy")),
+            E.p(E.a("Extensions", href="/get_all_extension")),
+        )

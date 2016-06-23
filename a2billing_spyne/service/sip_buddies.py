@@ -42,11 +42,11 @@ from spyne.const.http import HTTP_302
 
 from neurons.form import HtmlForm
 
-from a2billing_spyne.model import SipBuddies
+from a2billing_spyne.model import SipBuddy
 from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
 
 
-SipBuddyScreen = SipBuddies.customize(
+SipBuddyScreen = SipBuddy.customize(
         prot=HtmlForm(), form_action="put_sip",
         child_attrs_all=dict(
             exc=True,
@@ -73,7 +73,7 @@ class NewSipDetailScreen(ScreenBase):
 
 
 class SipDal(DalBase):
-    def put_sip(self, sip):
+    def put_sip_buddy(self, sip):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
             sip.qualify = 'yes'
             session.add(sip)
@@ -82,26 +82,26 @@ class SipDal(DalBase):
 
     def get_sip(self, sip):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
-            return session.query(SipBuddies).filter(SipBuddies.id == sip.id).one()
+            return session.query(SipBuddy).filter(SipBuddy.id == sip.id).one()
 
 
 class SipReaderServices(ReaderServiceBase):
-    @rpc(SipBuddies.novalidate_freq(), _returns=NewSipBuddyScreen,
+    @rpc(SipBuddy.novalidate_freq(), _returns=NewSipBuddyScreen,
          _body_style='bare')
     def new_sip_buddy(ctx, sip):
         return NewSipBuddyScreen(title="New Sip Buddy", main=sip)
 
-    @rpc(SipBuddies.novalidate_freq(), _returns=NewSipBuddyScreen,
+    @rpc(SipBuddy.novalidate_freq(), _returns=NewSipBuddyScreen,
          _body_style='bare')
-    def get_sip_detail(ctx,sip):
+    def get_sip_buddy(ctx,sip):
         return deferToThread(SipDal(ctx).get_sip, sip) \
             .addCallback(lambda ret:
                          NewSipDetailScreen(title="Get Sip Buddy", main=ret))
 
 
 class SipWriterServices(ReaderServiceBase):
-    @rpc(SipBuddies, _body_style='bare')
-    def put_sip(ctx, sip):
-        return deferToThread(SipDal(ctx).put_sip, sip) \
+    @rpc(SipBuddy, _body_style='bare')
+    def put_sip_buddy(ctx, sip):
+        return deferToThread(SipDal(ctx).put_sip_buddy, sip) \
             .addCallback(lambda ret: ctx.transport.respond(HTTP_302,
                                       location="get_sip_detail?id=%d" % ret.id))

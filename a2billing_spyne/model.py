@@ -1286,7 +1286,7 @@ class ServiceReport(TableModel):
     totalcredit = Float
 
 
-class SipBuddies(TableModel):
+class SipBuddy(TableModel):
     __tablename__ = 'cc_sip_buddies'
 
     id = Integer32(primary_key=True)
