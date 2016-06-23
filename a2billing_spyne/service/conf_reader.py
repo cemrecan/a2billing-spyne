@@ -1,5 +1,5 @@
 #!usr/bin/env python
-from a2billing_spyne.model import SipBuddies
+from a2billing_spyne.model import SipBuddies, Extensions
 from contextlib import closing
 
 from sqlalchemy import create_engine
@@ -57,6 +57,61 @@ for line in table:
                     dtmfmode = (data[1])[:-1]
                 elif data[0] == "callerid" and len(data) >= 2:
                     callerid = (data[1])[:-1]
-            print name,data[1]
+
+session.commit()
+
+
+
+
+with closing(open("extensions.conf")) as file:
+    table = file.readlines()
+
+exten = None
+priority = None
+app = None
+appdata = None
+context = None
+
+sip_buddies = session.query(SipBuddies).all()
+contexts = set()
+
+for sb in sip_buddies:
+    contexts.add(sb.context)
+
+for line in table:
+    if line[0] == '[':
+        context = line.split()
+        context = (context[0])[1:-1]
+        print context
+
+    else:
+        data = line.split(" => ")
+        if context is not None and context in contexts and data[0].isalpha():
+            if data[0] == "exten":
+                areas = data[1].split(",")
+                appdatavalue = areas[2].split("(")
+
+                exten = areas[0]
+                if exten[0] == "_":
+                    exten = exten[1:-1]
+
+                priority = areas[1]
+
+                app = appdatavalue[0]
+
+                appdata = (appdatavalue[1])[:-2]
+
+                print data[0], exten, priority, app, appdata
+
+    if context in contexts:
+        session.add(Extensions(
+            exten=exten,
+            priority=priority,
+            app=app,
+            appdata=appdata,
+            context=context,
+        ))
+        session.flush()
+
 
 session.commit()
