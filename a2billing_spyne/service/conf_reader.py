@@ -61,8 +61,6 @@ for line in table:
 session.commit()
 
 
-
-
 with closing(open("extensions.conf")) as file:
     table = file.readlines()
 
@@ -87,21 +85,18 @@ for line in table:
     else:
         data = line.split(" => ")
         if context is not None and context in contexts and data[0].isalpha():
-            if data[0] == "exten":
-                areas = data[1].split(",")
-                appdatavalue = areas[2].split("(")
+            appdatavalue = data[1].split("(")
+            areas = appdatavalue[0].split(",")
 
-                exten = areas[0]
-                if exten[0] == "_":
-                    exten = exten[1:-1]
+            exten = areas[0]
 
-                priority = areas[1]
+            priority = areas[1]
 
-                app = appdatavalue[0]
+            app = areas[2]
 
-                appdata = (appdatavalue[1])[:-2]
+            appdata = (appdatavalue[1])[:-2]
 
-                print data[0], exten, priority, app, appdata
+            print data[0], exten, priority, app, appdata
 
     if context in contexts:
         session.add(Extensions(
@@ -115,3 +110,4 @@ for line in table:
 
 
 session.commit()
+
