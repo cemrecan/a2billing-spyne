@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 with closing(open("sip.conf")) as file:
     table = file.readlines()
 
-sip = SipBuddy._type_info
+sip_buddy_area = SipBuddy._type_info
 
 db = create_engine('postgres://postgres:@localhost:5432/radius')
 
@@ -43,7 +43,7 @@ for line in table:
     else:
         data = line.split("=")
         if name is not None and name != 'general' and data[0].isalpha():
-            if data[0] in sip.keys():
+            if data[0] in sip_buddy_area.keys():
                 if data[0] == "qualify" and len(data) >= 2:
                     qualify = (data[1])[:-1]
                 elif data[0] == "type" and len(data) >= 2:
