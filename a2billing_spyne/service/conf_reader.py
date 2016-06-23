@@ -1,5 +1,5 @@
 #!usr/bin/env python
-from a2billing_spyne.model import SipBuddies, Extensions
+from a2billing_spyne.model import SipBuddy, Extensions
 from contextlib import closing
 
 from sqlalchemy import create_engine
@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 with closing(open("sip.conf")) as file:
     table = file.readlines()
 
-sip = SipBuddies._type_info
+sip = SipBuddy._type_info
 
 db = create_engine('postgres://postgres:@localhost:5432/radius')
 
@@ -26,7 +26,7 @@ callerid = None
 for line in table:
     if line[0] == '[':
         if name is not None and name != 'general':
-            session.add(SipBuddies(
+            session.add(SipBuddy(
                 name=name,
                 qualify=qualify,
                 type=type,
@@ -39,6 +39,7 @@ for line in table:
             session.flush()
         name = line.split()
         name = (name[0])[1:-1]
+
     else:
         data = line.split("=")
         if name is not None and name != 'general' and data[0].isalpha():
@@ -72,7 +73,7 @@ app = None
 appdata = None
 context = None
 
-sip_buddies = session.query(SipBuddies).all()
+sip_buddies = session.query(SipBuddy).all()
 contexts = set()
 
 for sb in sip_buddies:

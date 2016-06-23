@@ -1,13 +1,13 @@
 #!usr/bin/env python
 
-from a2billing_spyne.model import SipBuddies
+from a2billing_spyne.model import SipBuddy
 from contextlib import closing
 
 class File():
     with closing(open("siptry.conf")) as file:
         table = file.readlines()
 
-    sip = SipBuddies._type_info
+    sip = SipBuddy._type_info
 
     for line in table:
         if line[0] == '[':
