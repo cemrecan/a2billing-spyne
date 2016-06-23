@@ -35,18 +35,50 @@
 
 from contextlib import closing
 
+from lxml.html.builder import E
+
 from twisted.internet.threads import deferToThread
 
-from spyne import rpc
+from spyne import rpc, Array
+from spyne.protocol.html.table import HtmlColumnTable
 
-from neurons.form import HtmlForm
+from neurons.form import HtmlForm, HrefWidget
 
 from a2billing_spyne.model import Card
 from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
 
 
 class NewCardScreen(ScreenBase):
-    main = Card.customize(prot=HtmlForm(), form_action="put_card")
+    main = Card.customize(
+        prot=HtmlForm(), form_action="put_card",
+        child_attrs=dict(
+            id=dict(exc=True),
+        ),
+    )
+
+
+class CardDetailScreen(ScreenBase):
+    main = Card.customize(
+        prot=HtmlForm(), form_action="put_card",
+        child_attrs=dict(
+            id=dict(write=False),
+        ),
+    )
+
+
+def _write_new_card_link(ctx, cls, inst, parent, name, *kwargs):
+    parent.write(E.a("New Card", href="/new_card"))
+
+
+class CardListScreen(ScreenBase):
+    main = Array(
+        Card.customize(
+            child_attrs=dict(
+                id=dict(prot=HrefWidget("/get_card?id={}")),
+            ),
+        ),
+        prot=HtmlColumnTable(before_table=_write_new_card_link),
+    )
 
 
 class CardDal(DalBase):
@@ -55,11 +87,30 @@ class CardDal(DalBase):
             session.add(card)
             session.commit()
 
+    def get_card(self, card):
+        with closing(self.ctx.app.config.get_main_store().Session()) as session:
+            return session.query(Card).filter_by(id=card.id).one()
+
+    def get_all_card(self, card):
+        with closing(self.ctx.app.config.get_main_store().Session()) as session:
+            return session.query(Card).all()
+
 
 class CardReaderServices(ReaderServiceBase):
     @rpc(Card, _returns=NewCardScreen, _body_style='bare')
     def new_card(ctx, card):
         return NewCardScreen(title="Echo Card", main=card)
+
+    @rpc(Card, _returns=CardDetailScreen, _body_style='bare')
+    def get_card(ctx, card):
+        return deferToThread(CardDal(ctx).get_card, card) \
+            .addCallback(lambda ret:
+                                   CardDetailScreen(title="Get Card", main=ret))
+
+    @rpc(Card, _returns=CardListScreen, _body_style='bare')
+    def get_all_card(ctx, card):
+        return deferToThread(CardDal(ctx).get_all_card, card) \
+            .addCallback(lambda ret: CardListScreen(title="Cards", main=ret))
 
 
 class CardWriterServices(ReaderServiceBase):
