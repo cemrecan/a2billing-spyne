@@ -37,6 +37,13 @@ for line in table:
                 callerid=callerid,
             ))
             session.flush()
+        qualify = None
+        type = None
+        host = None
+        context = None
+        secret = None
+        dtmfmode = None
+        callerid = None
         name = line.split()
         name = (name[0])[1:-1]
 
@@ -111,4 +118,3 @@ for line in table:
 
 
 session.commit()
-

@@ -778,7 +778,7 @@ class Extensions(TableModel):
     id = Integer32(primary_key=True)
     context = Unicode(64, default='home')
     exten = Unicode(20, default='')
-    priority = Unicode(4, default=0)
+    priority = Unicode(4, default='0')
     app = Unicode(20, default='Dial')
     appdata= Unicode(128, default='')
 
