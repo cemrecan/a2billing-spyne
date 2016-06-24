@@ -33,46 +33,70 @@
 #
 
 
+
 from contextlib import closing
+
+from lxml.html.builder import E
 
 from twisted.internet.threads import deferToThread
 
-from spyne import rpc
+from spyne import rpc, Array
 from spyne.const.http import HTTP_302
+from spyne.protocol.html.table import HtmlColumnTable
 
-from neurons.form import HtmlForm
+from neurons.form import HtmlForm, HrefWidget
 
 from a2billing_spyne.model import SipBuddy
 from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
 
 
+SIP_BUDDY_CUST = dict(
+    name=dict(order=1, exc=False),
+    callerid=dict(order=2, exc=False),
+    context=dict(order=3, write=False, exc=False),
+    dtmfmode=dict(order=4, exc=False),
+    host=dict(order=5, write=False, exc=False),
+    secret=dict(order=6, exc=False),
+    type=dict(order=7, exc=False),
+)
+
+
 SipBuddyScreen = SipBuddy.customize(
-        prot=HtmlForm(), form_action="put_sip_buddy",
-        child_attrs_all=dict(
-            exc=True,
-        ),
-        child_attrs=dict(
-            id=dict(order=0, write=False, exc=False),
-            name=dict(order=1, exc=False),
-            callerid=dict(order=2, exc=False),
-            context=dict(order=3, write=False, exc=False),
-            dtmfmode=dict(order=4, exc=False),
-            host=dict(order=5, write=False, exc=False),
-            secret=dict(order=6, exc=False),
-            type=dict(order=7, exc=False),
-        ),
-    )
+    prot=HtmlForm(), form_action="put_sip_buddy",
+    child_attrs_all=dict(exc=True,),
+    child_attrs=dict(
+        id=dict(order=0, write=False, exc=False),
+        **SIP_BUDDY_CUST
+    ),
+)
 
 
 class NewSipBuddyScreen(ScreenBase):
     main = SipBuddyScreen
 
 
-class NewSipDetailScreen(ScreenBase):
+class SipBuddyDetailScreen(ScreenBase):
     main = SipBuddyScreen
 
 
-class SipDal(DalBase):
+def _write_new_sip_buddy_link(ctx, cls, inst, parent, name, *kwargs):
+    parent.write(E.a("New SipBuddy", href="/new_sip_buddy"))
+
+
+class SipBuddyListScreen(ScreenBase):
+    main = Array(
+        SipBuddy.customize(
+            child_attrs_all=dict(exc=True,),
+            child_attrs=dict(
+                id=dict(prot=HrefWidget("/get_sip_buddy?id={}")),
+            **SIP_BUDDY_CUST
+            ),
+        ),
+        prot=HtmlColumnTable(before_table=_write_new_sip_buddy_link),
+    )
+
+
+class SipBuddyDal(DalBase):
     def put_sip_buddy(self, sip_buddy):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
             sip_buddy.qualify = 'yes'
@@ -84,25 +108,34 @@ class SipDal(DalBase):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
             return session.query(SipBuddy).filter(SipBuddy.id ==
                                                             sip_buddy.id).one()
+    def get_all_sip_buddy(self, sip_buddy):
+        with closing(self.ctx.app.config.get_main_store().Session()) as session:
+            return session.query(SipBuddy).all()
 
-
-class SipReaderServices(ReaderServiceBase):
+class SipBuddyReaderServices(ReaderServiceBase):
     @rpc(SipBuddy.novalidate_freq(), _returns=NewSipBuddyScreen,
          _body_style='bare')
     def new_sip_buddy(ctx, sip_buddy):
         return NewSipBuddyScreen(title="New Sip Buddy", main=sip_buddy)
 
-    @rpc(SipBuddy.novalidate_freq(), _returns=NewSipBuddyScreen,
+    @rpc(SipBuddy.novalidate_freq(), _returns=SipBuddyDetailScreen,
          _body_style='bare')
     def get_sip_buddy(ctx,sip_buddy):
-        return deferToThread(SipDal(ctx).get_sip_buddy, sip_buddy) \
+        return deferToThread(SipBuddyDal(ctx).get_sip_buddy, sip_buddy) \
             .addCallback(lambda ret:
-                         NewSipDetailScreen(title="Get Sip Buddy", main=ret))
+                         SipBuddyDetailScreen(title="Get Sip Buddy", main=ret))
+
+    @rpc(SipBuddy.novalidate_freq(), _returns=SipBuddyListScreen, _body_style='bare')
+    def get_all_sip_buddy(ctx, sip_buddy):
+        return deferToThread(SipBuddyDal(ctx).get_all_sip_buddy, sip_buddy) \
+            .addCallback(lambda ret: SipBuddyListScreen(title="Sip Buddies",
+                                                                      main=ret))
 
 
-class SipWriterServices(ReaderServiceBase):
+class SipBuddyWriterServices(ReaderServiceBase):
     @rpc(SipBuddy, _body_style='bare')
     def put_sip_buddy(ctx, sip_buddy):
-        return deferToThread(SipDal(ctx).put_sip_buddy, sip_buddy) \
+        return deferToThread(SipBuddyDal(ctx).put_sip_buddy, sip_buddy) \
             .addCallback(lambda ret: ctx.transport.respond(HTTP_302,
-                                      location="get_sip_detail?id=%d" % ret.id))
+                                      location="get_sip_buddy?id=%d" %
+                                               ret.id))
