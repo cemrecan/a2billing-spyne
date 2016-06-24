@@ -33,32 +33,37 @@
 #
 
 
+
 from contextlib import closing
+
+from lxml.html.builder import E
 
 from twisted.internet.threads import deferToThread
 
-from spyne import rpc
-
-from neurons.form import HtmlForm
-
+from spyne import rpc, Array
 from spyne.const.http import HTTP_302
+from spyne.protocol.html.table import HtmlColumnTable
+
+from neurons.form import HtmlForm, HrefWidget
 
 from a2billing_spyne.model import Extensions
 from a2billing_spyne.service import ReaderServiceBase, ScreenBase, DalBase
 
+EXTENSION_CUST = dict(
+    exten=dict(order=1),
+    priority=dict(order=2),
+    app=dict(order=3),
+    appdata=dict(order=4),
+    context=dict(order=5)
+)
+
+
 ExtScreen = Extensions.customize(
     prot=HtmlForm(), form_action="put_ext",
-    child_attrs_all=dict(
-        exc=False,
-    ),
-
+    child_attrs_all=dict(exc=False,),
     child_attrs=dict(
         id=dict(order=0, write=False),
-        exten=dict(order=1),
-        priority=dict(order=2),
-        app=dict(order=3),
-        appdata=dict(order=4),
-        context=dict(order=5)
+        **EXTENSION_CUST
     ),
 )
 
@@ -69,6 +74,21 @@ class NewExtScreen(ScreenBase):
 
 class NewExtDetailScreen(ScreenBase):
     main = ExtScreen
+
+def _write_new_ext_link(ctx, cls, inst, parent, name, *kwargs):
+    parent.write(E.a("New Extension", href="/new_ext"))
+
+class ExtListScreen(ScreenBase):
+    main = Array(
+        Extensions.customize(
+            child_attrs_all=dict(exc=False,),
+            child_attrs=dict(
+                id=dict(prot=HrefWidget("/get_ext?id={}")),
+                **EXTENSION_CUST
+            ),
+    ),
+        prot=HtmlColumnTable(before_table=_write_new_ext_link),
+    )
 
 
 class ExtDal(DalBase):
@@ -82,20 +102,28 @@ class ExtDal(DalBase):
         with closing(self.ctx.app.config.get_main_store().Session()) as session:
             return session.query(Extensions).filter(Extensions.id ==
                                                     ext.id).one()
+    def get_all_extension(self, ext):
+        with closing(self.ctx.app.config.get_main_store().Session()) as session:
+            return session.query(Extensions).all()
 
 
 class ExtReaderServices(ReaderServiceBase):
-    @rpc(Extensions.novalidate_freq(), _returns=NewExtScreen,
-                                                             _body_style='bare')
+    @rpc(Extensions, _returns=NewExtScreen,_body_style='bare')
     def new_ext(ctx, ext):
         return NewExtScreen(title="New Extension", main=ext)
 
-    @rpc(Extensions.novalidate_freq(), _returns=NewExtScreen,
-                                                             _body_style='bare')
+    @rpc(Extensions, _returns=NewExtScreen,_body_style='bare')
     def get_ext_detail(ctx, ext):
         return deferToThread(ExtDal(ctx).get_ext, ext) \
             .addCallback(lambda ret:
                             NewExtDetailScreen(title="Get Extension", main=ret))
+
+
+    @rpc(Extensions, _returns=ExtListScreen,_body_style='bare')
+    def get_all_extension(ctx, ext):
+        return deferToThread(ExtDal(ctx).get_all_extension, ext) \
+            .addCallback(lambda ret: ExtListScreen(title="Extensions",main=ret))
+
 
 
 class ExtWriterServices(ReaderServiceBase):
